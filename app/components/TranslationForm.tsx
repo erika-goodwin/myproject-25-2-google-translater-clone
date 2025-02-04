@@ -66,12 +66,13 @@ export default function TranslationForm({
             Text
           </p>
         </div>
+        {/*  Record button here */}
       </div>
       <form action={formAction}>
         <div className="flex flex-col space-y-2 lg:flex-row lg:space-y-0 lg:space-x-2">
           <div className="flex-1 space-y-2">
-            <Select name="inputLamguage" defaultValue="auto">
-              <SelectTrigger className="w-[280px] border-non text-blue-500 font-bold">
+            <Select name="inputLanguage" defaultValue="auto">
+              <SelectTrigger className="w-64 border-none text-blue-500 font-bold ">
                 <SelectValue placeholder="Select a language" />
               </SelectTrigger>
 
@@ -103,7 +104,7 @@ export default function TranslationForm({
 
           <div className="flex-1 space-y-2">
             <Select name="outputLanguage" defaultValue="fr">
-              <SelectTrigger className="w-[280px] border-non text-blue-500 font-bold">
+              <SelectTrigger className="w-64 border-none text-blue-500 font-bold">
                 <SelectValue placeholder="Select a language" />
               </SelectTrigger>
 
