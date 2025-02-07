@@ -4,6 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { State } from "../components/TranslationForm";
 import axios from "axios";
 import { v4 } from "uuid";
+import { addOrUpdateUser } from "@/mongodb/models/User";
+import { revalidateTag } from "next/cache";
 
 const key = process.env.AZURE_TEXT_TRANSLATION_KEY;
 const endpoint = process.env.AZURE_TEXT_TRANSLATION;
@@ -45,14 +47,32 @@ async function translate(prevState: State, formData: FormData) {
   });
 
   const data = response.data;
-  console.log(">>>> data:", data);
-
   if (data.error) {
     console.log(">>>> Error:", data.error.code, ": ", data.error.message);
   }
 
-  // Push to MongoDB here...
-  
+  // Push to MongoDB
+  // Set the input language to the detected language if it's set to auto
+  if (rawFormData.inputLanguage === "auto") {
+    rawFormData.inputLanguage = data[0].detectedLanguage.language;
+  }
+  try {
+    const translation = {
+      to: rawFormData.outputLanguage,
+      from: rawFormData.inputLanguage,
+      fromText: rawFormData.input,
+      toText: data[0].translations[0].text,
+    };
+
+    addOrUpdateUser(userId, translation);
+
+  } catch (error) {
+    console.error("Error adding or updating user", error);
+    throw error;
+  }
+
+  // This will revalidate the translation history page after mutation / update the text
+  revalidateTag("translationHistory");
 
   return {
     ...prevState,

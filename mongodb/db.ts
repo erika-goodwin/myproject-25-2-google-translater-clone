@@ -9,21 +9,18 @@ if (!connectionString) {
 }
 
 const connectDB = async () => {
-  console.log(">>> Connecting to database", mongoose.connections);
-  if (mongoose.connections?.readyState >= 1) {
+  // console.log(">>> Connecting to database", mongoose.connection);
+  if (mongoose.connection?.readyState >= 1) {
     console.log(">>>>>> Already connected to database  >>>>>>>>");
     return;
   }
 
-  try{
-    await mongoose.connect(connectionString)
+  try {
+    await mongoose.connect(connectionString);
     console.log(">>>>>> Connected to database  >>>>>>>>");
-
   } catch (error) {
     console.error("Error connecting to database", error);
-
   }
 };
-
 
 export default connectDB;
